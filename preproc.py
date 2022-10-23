@@ -1,0 +1,108 @@
+import pandas as pd
+
+columns = ["vintage.id",
+           "vintage.name",
+           "vintage.statistics.status",
+           "vintage.statistics.ratings_count",
+           "vintage.statistics.ratings_average",
+           "vintage.statistics.labels_count",
+           "vintage.statistics.wine_ratings_count",
+           "vintage.statistics.wine_ratings_average",
+           "vintage.statistics.wine_status",
+           "vintage.wine.id",
+           "vintage.wine.name",
+           "vintage.wine.type_id",
+           "vintage.wine.vintage_type",
+           "vintage.wine.is_natural",
+           "vintage.wine.region.id",
+           "vintage.wine.region.name",
+           "vintage.wine.region.name_en",
+           "vintage.wine.region.country.code",
+           "vintage.wine.region.country.name",
+           "vintage.wine.region.country.currency.code",
+           "vintage.wine.region.country.regions_count",
+           "vintage.wine.region.country.users_count",
+           "vintage.wine.region.country.wines_count",
+           "vintage.wine.region.country.wineries_count",
+           "vintage.wine.region.country.most_used_grapes",
+           "vintage.wine.winery.id",
+           "vintage.wine.winery.name",
+           "vintage.wine.taste.structure.acidity",
+           "vintage.wine.taste.structure.fizziness",
+           "vintage.wine.taste.structure.intensity",
+           "vintage.wine.taste.structure.sweetness",
+           "vintage.wine.taste.structure.tannin",
+           "vintage.wine.taste.structure.user_structure_count",
+           "vintage.wine.taste.structure.calculated_structure_count",
+           "vintage.wine.taste.flavor",
+           "vintage.wine.statistics.ratings_count",
+           "vintage.wine.statistics.labels_count",
+           "vintage.wine.statistics.vintages_count",
+           "vintage.wine.style.id",
+           "vintage.wine.style.regional_name",
+           "vintage.wine.style.varietal_name",
+           "vintage.wine.style.name",
+           "vintage.wine.style.description",
+           "vintage.wine.style.blurb",
+           "vintage.wine.style.interesting_facts",
+           "vintage.wine.style.body",
+           "vintage.wine.style.body_description",
+           "vintage.wine.style.acidity",
+           "vintage.wine.style.acidity_description",
+           "vintage.wine.style.country.name",
+           "vintage.wine.style.country.regions_count",
+           "vintage.wine.style.country.users_count",
+           "vintage.wine.style.country.wines_count",
+           "vintage.wine.style.country.wineries_count",
+           "vintage.wine.style.country.most_used_grapes",
+           "vintage.wine.style.wine_type_id",
+           "vintage.wine.style.food",
+           "vintage.wine.style.grapes",
+           "vintage.wine.style.region.id",
+           "vintage.wine.style.region.name",
+           "vintage.wine.style.region.name_en",
+           "vintage.wine.style.region.country.name",
+           "vintage.wine.style.region.country.regions_count",
+           "vintage.wine.style.region.country.users_count",
+           "vintage.wine.style.region.country.wines_count",
+           "vintage.wine.style.region.country.wineries_count",
+           "vintage.wine.style.region.country.most_used_grapes",
+           "vintage.wine.style.region.parent_id",
+           "vintage.wine.style.region.statistics.wineries_count",
+           "vintage.wine.style.region.statistics.wines_count",
+           "vintage.wine.style.region.statistics.sub_regions_count",
+           "vintage.wine.style.region.statistics.parent_regions_count",
+           "vintage.wine.has_valid_ratings",
+           "vintage.year",
+           "vintage.grapes",
+           "vintage.has_valid_ratings",
+           "price.id",
+           "price.amount",
+           "price.discounted_from",
+           "price.discount_percent",
+           "price.type",
+           "price.sku",
+           "price.currency.code",
+           "price.bottle_type.id",
+           "price.bottle_type.name",
+           "price.bottle_type.short_name",
+           "price.bottle_type.short_name_plural",
+           "price.bottle_type.volume_ml",
+           ]
+data = pd.read_csv("output.csv", low_memory=False)
+data = data[columns]
+data = data.drop_duplicates(["vintage.id", "vintage.wine.id"])
+
+
+def sep_data(val):
+    if val < 20:
+        return "low"
+    if val > 50:
+        return "high"
+    return "medium"
+
+
+data["price_category"] = data['price.amount'].apply(sep_data)
+print(data)
+# data = data[data.duplicated(subset=["vintage.id", "vintage.wine.id"])]
+data.to_csv("data_processed.csv", index=False)
